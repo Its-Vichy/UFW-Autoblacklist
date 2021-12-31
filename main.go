@@ -49,7 +49,7 @@ func blacklist(host string, text string) {
 	for _, addr := range regexp.MustCompile(`((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)`).FindAllString(text, -1) {
 		if addr != host || !is_blacklisted(addr) {
 			if juge_spam(addr, found_address) {
-				exec.Command("bash", "-c", fmt.Sprintf("sudo ufw deny from %s to any", addr)).Run()
+				exec.Command("bash", "-c", fmt.Sprintf("iptables -I INPUT -s %s -j DROP", addr)).Run()
 				fmt.Printf("> Blacklist address --> %s\n", addr)
 				return
 			}
